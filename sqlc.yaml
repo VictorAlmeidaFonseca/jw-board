@@ -1,0 +1,58 @@
+version: "2"
+sql:
+  - engine: "sqlite"
+    queries: "internal/infra/db/sql/assignment/query.sql"
+    schema: "internal/infra/db/sql/assignment/schema.sql"
+    gen:
+      go:
+        package: "repository"
+        emit_json_tags: true
+        emit_result_struct_pointers: true
+        output_models_file_name: "assignment_models.go"
+        output_querier_file_name: "assignment_querier.go"
+        output_db_file_name: 'repo.go'
+        json_tags_case_style: "camel"
+        out: "internal/infra/db/repository"
+
+  - engine: "sqlite"
+    queries: "internal/infra/db/sql/person/query.sql"
+    schema: "internal/infra/db/sql/person/schema.sql"
+    gen:
+      go:
+        package: "repository"
+        emit_json_tags: true
+        emit_result_struct_pointers: true
+        output_models_file_name: "person_models.go"
+        output_querier_file_name: "person_querier.go"
+        output_db_file_name: 'repo.go'
+        json_tags_case_style: "camel"
+        out: "internal/infra/db/repository"
+
+  - engine: "sqlite"
+    queries: "internal/infra/db/sql/person_role/query.sql"
+    schema: "internal/infra/db/sql/person_role/schema.sql"
+    gen:
+      go:
+        package: "repository"
+        emit_json_tags: true
+        emit_result_struct_pointers: true
+        output_models_file_name: "person_role_models.go"
+        output_querier_file_name: "person_role_querier.go"
+        output_db_file_name: 'repo.go'
+        json_tags_case_style: "camel"
+        out: "internal/infra/db/repository"
+        
+
+  - engine: "sqlite"
+    queries: "internal/infra/db/sql/role/query.sql"
+    schema: "internal/infra/db/sql/role/schema.sql"
+    gen:
+      go:
+        package: "repository"
+        emit_json_tags: true
+        emit_result_struct_pointers: true
+        output_models_file_name: "role_models.go"
+        output_querier_file_name: "role_querier.go"
+        output_db_file_name: 'repo.go'
+        json_tags_case_style: "camel"
+        out: "internal/infra/db/repository"
