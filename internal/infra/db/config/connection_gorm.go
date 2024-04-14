@@ -16,11 +16,11 @@ var (
 	once     sync.Once
 )
 
-func NewPool() (*Pool, error) {
+func (*Pool) NewPool() (*Pool, error) {
 	var err error
 
 	once.Do(func() {
-		db, dbErr := gorm.Open(sqlite.Open("jw-board.db"), &gorm.Config{})
+		db, dbErr := gorm.Open(sqlite.Open("data/jw-board.db"), &gorm.Config{})
 		if dbErr != nil {
 			err = dbErr
 			return
@@ -31,4 +31,11 @@ func NewPool() (*Pool, error) {
 	})
 
 	return instance, err
+}
+
+func (*Pool) DestructPool() {
+	if instance != nil {
+		sqlDB, _ := instance.Conn.DB()
+		sqlDB.Close()
+	}
 }

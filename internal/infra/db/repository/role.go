@@ -9,11 +9,11 @@ import (
 
 type RoleRepository struct {
 	poll *config.Pool
-	role entity.Role
 }
 
 func NewRoleRepository() *RoleRepository {
-	poll, err := config.NewPool()
+	conn := &config.Pool{}
+	poll, err := conn.NewPool()
 	if err != nil {
 		fmt.Println("Connection Error: ", err)
 		panic(err)
@@ -22,7 +22,6 @@ func NewRoleRepository() *RoleRepository {
 	poll.Conn.AutoMigrate(&entity.Role{})
 
 	return &RoleRepository{
-		role: entity.Role{},
 		poll: poll,
 	}
 }
@@ -53,23 +52,23 @@ func (s *RoleRepository) Create(role entity.Role) (int64, error) {
 		return 0, result.Error
 	}
 
-	return role.ID, nil
+	return result.RowsAffected, nil
 }
 
 func (s *RoleRepository) Update(role entity.Role) (int64, error) {
-	result := s.poll.Conn.Save(&role)
+	result := s.poll.Conn.Model(&role).Where("id = ?", role.ID).Updates(&role)
 	if result.Error != nil {
 		return 0, result.Error
 	}
 
-	return role.ID, nil
+	return result.RowsAffected, nil
 }
 
 func (s *RoleRepository) Delete(id int64) (int64, error) {
-	result := s.poll.Conn.Delete(&s.role, id)
+	result := s.poll.Conn.Delete(entity.Role{}, id)
 	if result.Error != nil {
 		return 0, result.Error
 	}
 
-	return id, nil
+	return result.RowsAffected, nil
 }
