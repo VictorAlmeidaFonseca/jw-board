@@ -1,8 +1,7 @@
 package entity
 
 type Person struct {
-	ID        int64
-	FirstName string
-	LastName  string
-	RoleID    []int64
+	ID        int64  `json:"id"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
 }

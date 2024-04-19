@@ -1,4 +1,4 @@
-package adapter
+package protocol
 
 type DatabaseHandler[T any] interface {
 	NewPool() (*T, error)
