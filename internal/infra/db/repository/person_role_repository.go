@@ -1,28 +1,19 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/VictorAlmeidaFonseca/jw-board/internal/domain/entity"
 	"github.com/VictorAlmeidaFonseca/jw-board/internal/infra/db/config"
+
+	protocol "github.com/VictorAlmeidaFonseca/jw-board/internal/protocol"
 )
 
 type PersonRoleRepository struct {
 	poll *config.Pool
 }
 
-func NewPersonRoleRepository() *PersonRoleRepository {
-	conn := &config.Pool{}
-	poll, err := conn.NewPool()
-	if err != nil {
-		fmt.Println("Connection Error: ", err)
-		panic(err)
-	}
-
-	poll.Conn.AutoMigrate(&entity.PersonRole{})
-
+func NewPersonRoleRepository(adapter *protocol.DatabaseHandlerAdapter[config.Pool]) *PersonRoleRepository {
 	return &PersonRoleRepository{
-		poll: poll,
+		poll: adapter.Conn.(*config.Pool),
 	}
 }
 
@@ -56,7 +47,7 @@ func (s *PersonRoleRepository) Create(PersonRole entity.PersonRole) (int64, erro
 }
 
 func (s *PersonRoleRepository) Update(PersonRole entity.PersonRole) (int64, error) {
-	result := s.poll.Conn.Model(&PersonRole).Where("id = ?", PersonRole.ID).Updates(&PersonRole)
+	result := s.poll.Conn.Model(&PersonRole).Where("id = ?", PersonRole.PersonID).Updates(&PersonRole)
 	if result.Error != nil {
 		return 0, result.Error
 	}

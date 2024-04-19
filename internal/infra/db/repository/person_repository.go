@@ -1,28 +1,18 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/VictorAlmeidaFonseca/jw-board/internal/domain/entity"
 	"github.com/VictorAlmeidaFonseca/jw-board/internal/infra/db/config"
+	protocol "github.com/VictorAlmeidaFonseca/jw-board/internal/protocol"
 )
 
 type PersonRepository struct {
 	poll *config.Pool
 }
 
-func NewPersonRepository() *PersonRepository {
-	conn := &config.Pool{}
-	poll, err := conn.NewPool()
-	if err != nil {
-		fmt.Println("Connection Error: ", err)
-		panic(err)
-	}
-
-	poll.Conn.AutoMigrate(&entity.Person{})
-
+func NewPersonRepository(adapter *protocol.DatabaseHandlerAdapter[config.Pool]) *PersonRepository {
 	return &PersonRepository{
-		poll: poll,
+		poll: adapter.Conn.(*config.Pool),
 	}
 }
 

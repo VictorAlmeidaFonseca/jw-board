@@ -1,31 +1,20 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/VictorAlmeidaFonseca/jw-board/internal/domain/entity"
 	"github.com/VictorAlmeidaFonseca/jw-board/internal/infra/db/config"
+	protocol "github.com/VictorAlmeidaFonseca/jw-board/internal/protocol"
 )
 
 type RoleRepository struct {
 	poll *config.Pool
 }
 
-func NewRoleRepository() *RoleRepository {
-	conn := &config.Pool{}
-	poll, err := conn.NewPool()
-	if err != nil {
-		fmt.Println("Connection Error: ", err)
-		panic(err)
-	}
-
-	poll.Conn.AutoMigrate(&entity.Role{})
-
+func NewRoleRepository(adapter *protocol.DatabaseHandlerAdapter[config.Pool]) *RoleRepository {
 	return &RoleRepository{
-		poll: poll,
+		poll: adapter.Conn.(*config.Pool),
 	}
 }
-
 func (s *RoleRepository) FindAll() ([]entity.Role, error) {
 	var roles []entity.Role
 	result := s.poll.Conn.Find(&roles)
