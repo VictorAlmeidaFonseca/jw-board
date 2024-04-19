@@ -34,7 +34,7 @@ func (h *PersonHandler) FindByID(id int64) Response {
 	data, err := h.service.FindByID(id)
 	if err != nil {
 		return Response{
-			body: data,
+			body: err.Error(),
 			code: 404,
 		}
 	}
