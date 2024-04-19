@@ -1,6 +1,6 @@
 package entity
 
 type PersonRole struct {
-	PersonID int64
-	RoleID   int64
+	PersonID int64 `json:"personId"`
+	RoleID   int64 `json:"roleId"`
 }
