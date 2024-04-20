@@ -1,13 +1,14 @@
 package main
 
 import (
+	"context"
 	"embed"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 
-	bootstrap "github.com/VictorAlmeidaFonseca/jw-board/cmd/app"
+	service "github.com/VictorAlmeidaFonseca/jw-board/internal/main/factory/service"
 )
 
 //go:embed all:frontend/dist
@@ -15,7 +16,11 @@ var assets embed.FS
 
 func main() {
 	// Create an instance of the app structure
-	app := bootstrap.NewApp()
+	app := &App{}
+	role := service.NewRoleService()
+	person := service.NewPersonService()
+	personRole := service.NewPersonRoleService()
+	assignment := service.NewAssignmentService()
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -29,10 +34,26 @@ func main() {
 		OnStartup:        app.Startup,
 		Bind: []interface{}{
 			app,
+			role,
+			person,
+			personRole,
+			assignment,
 		},
 	})
 
 	if err != nil {
 		println("Error:", err.Error())
 	}
+}
+
+type App struct {
+	ctx context.Context
+}
+
+func NewApp() *App {
+	return &App{}
+}
+
+func (a *App) Startup(ctx context.Context) {
+	a.ctx = ctx
 }
